@@ -1,2 +1,2 @@
 # Quiz
-Practica Quiz del curso de NodeJs
+Práctica Quiz del curso de NodeJs
