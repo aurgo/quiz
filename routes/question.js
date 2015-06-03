@@ -4,7 +4,7 @@ var router = express.Router();
 //var quizController = require('../controllers/quiz_controller');
 
 router.get('/', function(req, res, next) {
-  res.render('quizes/question.ejs', { title: 'Quiz' });
+  res.render('quizes/question.ejs', { title: 'Quiz' , pregunta: 'Capital de Italia' });
 });
 
 module.exports = router;
