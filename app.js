@@ -8,8 +8,6 @@ var partials = require('express-partials');
 
 /* ROUTES */
 var routes = require('./routes/index');
-var question = require('./routes/question');
-var answer = require('./routes/answer');
 /* ROUTES */
 
 var app = express();
@@ -28,9 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* ROUTES */
 app.use('/', routes);
-app.use('/quizes', question);
-app.use('/quizes/question', question);
-app.use('/quizes/answer', answer);
+app.use('/quizes', routes);
+app.use('/quizes/question', routes);
+app.use('/quizes/answer', routes);
 app.use('/author', routes);
 /* ROUTES */
 
