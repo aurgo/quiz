@@ -18,7 +18,6 @@ exports.index = function(req, res) {
   {
     var texto_a_buscar = req.query.search.replace(new RegExp(' ', "g" ),'%');
     options = {where: ["pregunta like ?", '%' + texto_a_buscar + '%']}
-    console.log(texto_a_buscar);
   }
   models.Quiz.findAll(options).then(
     function(quizes) {
