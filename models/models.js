@@ -12,7 +12,7 @@ var host     = (url[4]||null);
 var storage  = process.env.DATABASE_STORAGE;
 
 //Cargar Modelo ORM
-var sequelize = new Sequelize(DB_name, user, pwd, 
+var sequelize = new Sequelize(DB_name, user, pwd,
   { dialect:  protocol,
     protocol: protocol,
     port:     port,
@@ -27,7 +27,8 @@ exports.Quiz = Quiz;
 sequelize.sync().then(function (){
   Quiz.count().then(function (count){
     if (count === 0)
-       Quiz.create({ pregunta: 'Capital de Italia', respuesta : 'Roma'})
+       Quiz.bulkCreate([ { pregunta: 'Capital de Italia', respuesta : 'Roma' } ,
+                     { pregunta: 'Capital de Portugal', respuesta : 'Lisboa' } ])
        .then(function () { console.log('Base de datos inicializada') });
   });
 });
