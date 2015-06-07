@@ -21,13 +21,13 @@ exports.index = function(req, res) {
   }
   models.Quiz.findAll(options).then(
     function(quizes) {
-      res.render('quizes/index.ejs', { quizes: quizes });
+      res.render('quizes/index.ejs', { quizes: quizes, errors:[] });
     }
   ).catch( function(error) { next(error) });
 };
 
 exports.show = function (req, res){
-    res.render('quizes/show', { quiz : req.quiz });
+    res.render('quizes/show', { quiz : req.quiz, errors:[] });
 };
 
 exports.answer = function(req, res) {
@@ -35,9 +35,63 @@ exports.answer = function(req, res) {
     if (req.query.respuesta === req.quiz.respuesta)
        respuesta = 'Correcto';
 
-  res.render('quizes/answer', { quiz: req.quiz, resultado : respuesta});
+  res.render('quizes/answer', { quiz: req.quiz, resultado : respuesta, errors:[]});
 };
 
+exports.new = function (req, res){
+  var quiz = models.Quiz.build( { pregunta: "", respuesta: "", tema: "otro"} );
+  res.render('quizes/new', { quiz : quiz, errors:[] });
+};
+
+exports.create = function (req, res){
+  var quiz = models.Quiz.build( req.body.quiz );
+  console.log(req.body);
+  quiz.validate()
+  .then(
+    function(err){
+      if (err)
+         res.render('quizes/new', {quiz: quiz, errors: err.errors });
+      else
+      {
+         quiz.save({ fields: ["pregunta", "respuesta", "tema"]})
+         .then(function() { res.redirect('/quizes') })
+      }
+    }
+  );
+};
+
+exports.edit = function (req, res){
+  var quiz = req.quiz;
+  console.log(req.quiz);
+  res.render('quizes/edit', { quiz : quiz, errors:[] });
+};
+
+exports.update = function (req, res){
+  req.quiz.pregunta = req.body.quiz.pregunta;
+  req.quiz.respuesta = req.body.quiz.respuesta;
+  req.quiz.tema = req.body.quiz.tema;
+
+  req.quiz.validate()
+  .then(
+    function(err){
+      if (err)
+         res.render('quizes/edit', {quiz: quiz, errors: err.errors });
+      else
+      {
+         req.quiz.save({ fields: ["pregunta", "respuesta", "tema"]})
+         .then(function() { res.redirect('/quizes') })
+      }
+    }
+  );
+};
+
+exports.delete = function (req, res){
+  req.quiz.destroy().then( function(err){
+    res.redirect('/quizes');
+  }).catch(function(error) { next(error)});
+};
+
+
 exports.author = function(req, res) {
-      res.render('author', { title: 'Quiz' });
+      res.render('author', { title: 'Quiz', errors:[] });
 };

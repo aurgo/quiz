@@ -15,7 +15,6 @@
       type='text/css'
       media='only screen and (max-width: 480px)'
       href='/stylesheets/smartphone.css' />
-
 </head>
 
 <body>
@@ -30,6 +29,16 @@
   </nav>
 
   <section class="main" id="s1">
+
+    <% if (errors.length) { %>
+      <span id='ErrorMsgs'><ul>
+        Corregir errores:<br/>
+        <% for (var i in errors) { %>
+          <li><span><%= errors[i].message %></span></li>
+        <% } %>
+      </ul></span>
+      <% } %>
+
      <div><%- body %></div>
   </section>
 
