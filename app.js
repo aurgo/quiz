@@ -12,6 +12,8 @@ var session = require('express-session');
 var routes = require('./routes/index');
 /* ROUTES */
 
+var session_expire_seconds = 120;
+
 var app = express();
 
 // view engine setup
@@ -28,9 +30,8 @@ app.use(session({ secret: 'Quiz-2015',
                   resave: false,
                   saveUninitialized: true,
                   rolling: true,
-                  cookie: { maxAge: 120000 }
+                  cookie: { maxAge: session_expire_seconds * 1000 }
                 }));
-
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -43,6 +44,26 @@ app.use(function (req, res, next){
 
   // Hacer visible req.session en las vistas
   res.locals.session = req.session;
+  next();
+});
+
+app.use(function(req, res, next)
+{
+  if (req.session.user != undefined)
+  {
+     var current_time_stamp = new Date();
+     var session_time_stamp = new Date(req.session.timestamp);
+     var different_last_session = Math.abs((current_time_stamp - session_time_stamp) / 1000);
+
+     if (different_last_session > session_expire_seconds)
+     {
+       var session_controller = require('./controllers/session_controller');
+       session_controller.delete(req, res);
+     }
+     else
+       req.session.timestamp = current_time_stamp;
+  }
+
   next();
 });
 

@@ -39,11 +39,16 @@ exports.create = function (req, res) {
 
 };
 
-exports.delete = function(req, res) {
-  delete req.session.user;
+exports.delete = function(req, res)
+{
+  if (req.session != undefined)
+  {
+    delete req.session.user;
+    delete req.session.timestamp;
 
-  if (!req.session.redir)
-     req.session.redir = '/';
+    if (!req.session.redir)
+       req.session.redir = '/';
 
-  res.redirect(req.session.redir.toString());
+    res.redirect(req.session.redir.toString());
+  }
 }
